@@ -73,6 +73,14 @@ public class Warehouse {
         return Collections.unmodifiableList(productRecords);
     }
 
+    public List<ProductRecord> getAllProductsThatHasBeenModifiedSinceCreation() {
+        List<ProductRecord> productRecords = products.stream()
+                .filter(p -> p.getModifiedDate().isAfter(p.getCreatedDate()))
+                .map(p -> new ProductRecord(p.getId(), p.getName(), p.getCategory(), p.getRating(), p.getCreatedDate(), p.getModifiedDate()))
+                .collect(Collectors.toList());
+        return Collections.unmodifiableList(productRecords);
+    }
+
 
 
 
@@ -95,32 +103,47 @@ public class Warehouse {
 //        //Get all products from the warehouse
 //        var products = warehouse.getAllProducts();
 //        products.forEach(System.out::println);
-//
+
+
 //        //Get a product by id
 //        var product = warehouse.getProductById("2");
 //        product.ifPresent(System.out::println);
-//
+
+
 //        //Get a product by id that does not exist
 //        var product2 = warehouse.getProductById("5");
 //        product2.ifPresentOrElse(System.out::println, () -> System.out.println("Product not found"));
-//
+
+
 //        //Update a product
 //        var updated = warehouse.updateProduct("3", "Product 3 Updated", Category.CLOTHING, 4);
 //        System.out.println("Product updated: " + updated);
-//
+
 //        //Get all products from the warehouse after updating
 //        var products2 = warehouse.getAllProducts();
 //        products2.forEach(System.out::println);
-//
+
+
 //        //Get all products by category sorted by product name
 //        var productsByCategory = warehouse.getAllProductsByCategorySortedByProductName(Category.ELECTRONICS);
 //        productsByCategory.forEach(System.out::println);
 
-        // Create a specific dat4
-        LocalDateTime specificDate = LocalDateTime.of(2024, 9, 14, 0, 0);
 
-        // Get all products created after a specific date
-        var productsCreatedAfterSpecificDate = warehouse.getAllProductsCreatedAfterASpecificDate(specificDate);
-        productsCreatedAfterSpecificDate.forEach(System.out::println);
+//        // Create a specific dat4
+//        LocalDateTime specificDate = LocalDateTime.of(2024, 9, 14, 0, 0);
+
+//        // Get all products created after a specific date
+//        var productsCreatedAfterSpecificDate = warehouse.getAllProductsCreatedAfterASpecificDate(specificDate);
+//        productsCreatedAfterSpecificDate.forEach(System.out::println);
+
+
+//        // Update a product
+//        warehouse.updateProduct("1", "Product 1 Updated", Category.BOOKS, 9);
+
+//        // Get all products that has been modified since creation
+//        var productsModifiedSinceCreation = warehouse.getAllProductsThatHasBeenModifiedSinceCreation();
+//        productsModifiedSinceCreation.forEach(System.out::println);
+
+
     }
 }
