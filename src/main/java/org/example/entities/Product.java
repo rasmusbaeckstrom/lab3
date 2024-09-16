@@ -3,14 +3,14 @@ package org.example.entities;
 import java.time.LocalDateTime;
 
 public class Product {
-    private final String id;
+    private final int id;
     private String name;
     private Category category;
     private int rating;
     private final LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public Product(String id, String name, Category category, int rating, LocalDateTime createdDate) {
+    public Product(int id, String name, Category category, int rating, LocalDateTime createdDate) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -19,7 +19,7 @@ public class Product {
         this.modifiedDate = createdDate;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
