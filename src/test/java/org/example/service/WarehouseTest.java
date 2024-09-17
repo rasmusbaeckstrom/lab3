@@ -217,4 +217,43 @@ class WarehouseTest {
         assertTrue(categories.contains(Category.CLOTHING));
     }
 
+    @Test
+    void testGetAllCategoriesThatHasAtLeastOneProductWhenNoneExist() {
+        Set<Category> categories = warehouse.getAllCategoriesThatHasAtLeastOneProduct();
+        assertTrue(categories.isEmpty());
+    }
+
+    @Test
+    void testGetNumberOfProductsInCategory() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        warehouse.addProduct(2, "Smartphone", Category.ELECTRONICS, 9);
+        warehouse.addProduct(3, "T-shirt", Category.CLOTHING, 7);
+        assertEquals(2, warehouse.getNumberOfProductsInCategory(Category.ELECTRONICS));
+        assertEquals(1, warehouse.getNumberOfProductsInCategory(Category.CLOTHING));
+    }
+
+    @Test
+    void testGetNumberOfProductsInCategoryWhenNoneExist() {
+        assertEquals(0, warehouse.getNumberOfProductsInCategory(Category.BOOKS));
+    }
+
+    @Test
+    void testAddProductWithExistingId() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.addProduct(1, "Smartphone", Category.ELECTRONICS, 9);
+        });
+    }
+
+    @Test
+    void testUpdateProductWithInvalidId() {
+        boolean updated = warehouse.updateProduct(999, "Non-Existent Product", Category.ELECTRONICS, 5);
+        assertFalse(updated);
+    }
+
+    @Test
+    void testGetAllProductsWhenNoneExist() {
+        List<ProductRecord> products = warehouse.getAllProducts();
+        assertTrue(products.isEmpty());
+    }
 }

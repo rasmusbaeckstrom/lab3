@@ -119,4 +119,11 @@ public class Warehouse {
                 .collect(Collectors.toSet());
         return Collections.unmodifiableSet(categories);
     }
+
+    // Method to get how many products there are in given category
+    public long getNumberOfProductsInCategory(Category category) {
+        return products.stream()
+                .filter(p -> p.getCategory().equals(category))
+                .count();
+    }
 }

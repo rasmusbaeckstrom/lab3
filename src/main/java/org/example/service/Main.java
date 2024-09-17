@@ -28,6 +28,7 @@ public class Main {
                     case 6 -> getAllProductsCreatedAfterASpecificDate();
                     case 7 -> getAllProductsThatHasBeenModifiedSinceCreation();
                     case 8 -> getAllCategoriesThatHasAtLeastOneProduct();
+                    case 9 -> getNumberOfProductsInCategory();
                     case 0 -> exit = true;
                     default -> System.out.println("Invalid choice. Please try again.");
                 }
@@ -46,6 +47,7 @@ public class Main {
         System.out.println("6. Get All Products Created After A Specific Date");
         System.out.println("7. Get All Products That Has Been Modified Since Creation");
         System.out.println("8. Get All Categories That Has At Least One Product");
+        System.out.println("9. Get Number Of Products In Category");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
     }
@@ -145,6 +147,20 @@ public class Main {
             System.out.println("No categories found with products.");
         } else {
             categories.forEach(System.out::println);
+        }
+    }
+
+    private static void getNumberOfProductsInCategory() {
+        while (true) {
+            System.out.print("Enter product category (ELECTRONICS, CLOTHING, BOOKS, TOYS): ");
+            try {
+                Category category = Category.valueOf(scanner.nextLine().toUpperCase());
+                long count = warehouse.getNumberOfProductsInCategory(category);
+                System.out.println("Number of products in category " + category + ": " + count);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid category. Please enter a valid category.");
+            }
         }
     }
 
