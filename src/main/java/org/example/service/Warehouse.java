@@ -126,4 +126,11 @@ public class Warehouse {
                 .filter(p -> p.getCategory().equals(category))
                 .count();
     }
+
+    // Method to get a Map that contains all the letters that product name start with as key and the number of products that start with that letter as value
+    public Map<Character, Long> getNumberOfProductsStartingWithEachLetter() {
+        Map<Character, Long> productsStartingWithEachLetter = products.stream()
+                .collect(Collectors.groupingBy(p -> p.getName().charAt(0), Collectors.counting()));
+        return Collections.unmodifiableMap(productsStartingWithEachLetter);
+    }
 }

@@ -256,4 +256,23 @@ class WarehouseTest {
         List<ProductRecord> products = warehouse.getAllProducts();
         assertTrue(products.isEmpty());
     }
+
+    @Test
+    void testGetNumberOfProductsStartingWithEachLetter() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        warehouse.addProduct(2, "Smartphone", Category.ELECTRONICS, 9);
+        warehouse.addProduct(3, "T-shirt", Category.CLOTHING, 7);
+        warehouse.addProduct(4, "Shoes", Category.CLOTHING, 6);
+        warehouse.addProduct(5, "Book", Category.BOOKS, 5);
+        warehouse.addProduct(6, "Tablet", Category.ELECTRONICS, 7);
+
+        var result = warehouse.getNumberOfProductsStartingWithEachLetter();
+
+        assertEquals(4, result.size());
+        assertEquals(1, result.get('L'));
+        assertEquals(2, result.get('S'));
+        assertEquals(2, result.get('T'));
+        assertEquals(1, result.get('B'));
+        assertFalse(result.containsKey('A')); // Ensure no unexpected keys
+    }
 }

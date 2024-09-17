@@ -29,6 +29,7 @@ public class Main {
                     case 7 -> getAllProductsThatHasBeenModifiedSinceCreation();
                     case 8 -> getAllCategoriesThatHasAtLeastOneProduct();
                     case 9 -> getNumberOfProductsInCategory();
+                    case 10 -> getNumberOfProductsStartingWithEachLetter();
                     case 0 -> exit = true;
                     default -> System.out.println("Invalid choice. Please try again.");
                 }
@@ -48,6 +49,7 @@ public class Main {
         System.out.println("7. Get All Products That Has Been Modified Since Creation");
         System.out.println("8. Get All Categories That Has At Least One Product");
         System.out.println("9. Get Number Of Products In Category");
+        System.out.println("10. Get Number Of Products Starting With Each Letter");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
     }
@@ -162,6 +164,11 @@ public class Main {
                 System.out.println("Invalid category. Please enter a valid category.");
             }
         }
+    }
+
+    private static void getNumberOfProductsStartingWithEachLetter() {
+        var counts = warehouse.getNumberOfProductsStartingWithEachLetter();
+        counts.forEach((letter, count) -> System.out.println(letter + ": " + count));
     }
 
     private static int getProductId() {
