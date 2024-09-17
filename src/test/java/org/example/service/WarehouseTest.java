@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -204,6 +205,16 @@ class WarehouseTest {
         warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> warehouse.checkIfProductIdExists(1));
         assertEquals("Product ID already exists.", exception.getMessage());
+    }
+
+    @Test
+    void testGetAllCategoriesThatHasAtLeastOneProduct() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        warehouse.addProduct(2, "T-shirt", Category.CLOTHING, 7);
+        Set<Category> categories = warehouse.getAllCategoriesThatHasAtLeastOneProduct();
+        assertEquals(2, categories.size());
+        assertTrue(categories.contains(Category.ELECTRONICS));
+        assertTrue(categories.contains(Category.CLOTHING));
     }
 
 }

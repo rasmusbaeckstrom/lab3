@@ -111,4 +111,12 @@ public class Warehouse {
                 .collect(Collectors.toList());
         return Collections.unmodifiableList(productRecords);
     }
+
+    // Method to get all Categories that has at least one product
+    public Set<Category> getAllCategoriesThatHasAtLeastOneProduct() {
+        Set<Category> categories = products.stream()
+                .map(Product::getCategory)
+                .collect(Collectors.toSet());
+        return Collections.unmodifiableSet(categories);
+    }
 }
