@@ -1,3 +1,6 @@
+// WarehouseTest contains unit tests for the Warehouse class.
+
+
 package org.example.service;
 
 import org.example.entities.Category;
@@ -98,4 +101,109 @@ class WarehouseTest {
         List<ProductRecord> products = warehouse.getAllProductsThatHasBeenModifiedSinceCreation();
         assertEquals(1, products.size());
     }
+
+
+    @Test
+    void testUpdateProductWithEmptyName() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.updateProduct(1, "", Category.ELECTRONICS, 9);
+        });
+    }
+
+    @Test
+    void testGetAllProductsByCategoryWhenNoneExist() {
+        List<ProductRecord> products = warehouse.getAllProductsByCategorySortedByProductName(Category.BOOKS);
+        assertTrue(products.isEmpty());
+    }
+
+    @Test
+    void testGetAllProductsCreatedAfterASpecificDateWhenNoneExist() {
+        LocalDateTime date = LocalDateTime.now().plusDays(1); // Future date
+        List<ProductRecord> products = warehouse.getAllProductsCreatedAfterASpecificDate(date);
+        assertTrue(products.isEmpty());
+    }
+
+    @Test
+    void testGetAllProductsThatHasBeenModifiedSinceCreationWhenNoneModified() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        List<ProductRecord> products = warehouse.getAllProductsThatHasBeenModifiedSinceCreation();
+        assertTrue(products.isEmpty());
+    }
+
+    @Test
+    void testAddProductWithEmptyName() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.addProduct(1, "", Category.ELECTRONICS, 8);
+        });
+    }
+
+    @Test
+    void testAddProductWithNullName() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.addProduct(1, null, Category.ELECTRONICS, 8);
+        });
+    }
+
+    @Test
+    void testAddProductWithInvalidRatingLow() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 0);
+        });
+    }
+
+    @Test
+    void testAddProductWithInvalidRatingHigh() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 11);
+        });
+    }
+
+    @Test
+    void testUpdateProductWithNullName() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.updateProduct(1, null, Category.ELECTRONICS, 9);
+        });
+    }
+
+    @Test
+    void testUpdateProductWithInvalidRatingLow() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.updateProduct(1, "Laptop", Category.ELECTRONICS, 0);
+        });
+    }
+
+    @Test
+    void testUpdateProductWithInvalidRatingHigh() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        assertThrows(IllegalArgumentException.class, () -> {
+            warehouse.updateProduct(1, "Laptop", Category.ELECTRONICS, 11);
+        });
+    }
+
+    @Test
+    void testValidateProductId() {
+        assertDoesNotThrow(() -> warehouse.validateProductId(1));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> warehouse.validateProductId(0));
+        assertEquals("Product ID must be a positive number.", exception.getMessage());
+    }
+
+    @Test
+    void testValidateProduct() {
+        assertDoesNotThrow(() -> warehouse.validateProduct("Laptop", 5));
+        IllegalArgumentException exception1 = assertThrows(IllegalArgumentException.class, () -> warehouse.validateProduct("", 5));
+        assertEquals("Product name cannot be empty.", exception1.getMessage());
+        IllegalArgumentException exception2 = assertThrows(IllegalArgumentException.class, () -> warehouse.validateProduct("Laptop", 0));
+        assertEquals("Product rating must be between 1 and 10.", exception2.getMessage());
+    }
+
+    @Test
+    void testCheckIfProductIdExists() {
+        warehouse.addProduct(1, "Laptop", Category.ELECTRONICS, 8);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> warehouse.checkIfProductIdExists(1));
+        assertEquals("Product ID already exists.", exception.getMessage());
+    }
+
 }

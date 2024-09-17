@@ -16,8 +16,35 @@ import java.util.stream.Collectors;
 public class Warehouse {
     private final List<Product> products = new ArrayList<>();
 
+    // Method to validate a product
+    public void validateProduct(String name, int rating) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Product name cannot be empty.");
+        }
+        if (rating < 1 || rating > 10) {
+            throw new IllegalArgumentException("Product rating must be between 1 and 10.");
+        }
+    }
+
+    // Method to validate product ID
+    public void validateProductId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Product ID must be a positive number.");
+        }
+    }
+
+    // Method to check if product ID already exists
+    public void checkIfProductIdExists(int id) {
+        if (products.stream().anyMatch(p -> p.getId() == id)) {
+            throw new IllegalArgumentException("Product ID already exists.");
+        }
+    }
+
     // Method to add a product
     public void addProduct(int id, String name, Category category, int rating) {
+        validateProductId(id);
+        validateProduct(name, rating);
+        checkIfProductIdExists(id);
         Product product = new Product(id, name, category, rating, LocalDateTime.now());
         products.add(product);
     }
@@ -40,6 +67,8 @@ public class Warehouse {
 
     // Method to update a product
     public boolean updateProduct(int id, String newName, Category newCategory, int newRating) {
+        validateProductId(id);
+        validateProduct(newName, newRating);
         Optional<Product> productOpt = products.stream()
                 .filter(p -> p.getId() == id)
                 .findFirst();
