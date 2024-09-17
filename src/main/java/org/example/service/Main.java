@@ -30,6 +30,7 @@ public class Main {
                     case 8 -> getAllCategoriesThatHasAtLeastOneProduct();
                     case 9 -> getNumberOfProductsInCategory();
                     case 10 -> getNumberOfProductsStartingWithEachLetter();
+                    case 11 -> getAllProductsWithMaxRatingCreatedThisMonthSortedByDate();
                     case 0 -> exit = true;
                     default -> System.out.println("Invalid choice. Please try again.");
                 }
@@ -50,6 +51,7 @@ public class Main {
         System.out.println("8. Get All Categories That Has At Least One Product");
         System.out.println("9. Get Number Of Products In Category");
         System.out.println("10. Get Number Of Products Starting With Each Letter");
+        System.out.println("11. Get All Products With Max Rating Created This Month Sorted By Date");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
     }
@@ -61,7 +63,7 @@ public class Main {
         int rating = getProductRating();
 
         try {
-            warehouse.addProduct(id, name, category, rating);
+            warehouse.addProduct(id, name, category, rating, LocalDateTime.now());
             System.out.println("Product added successfully.");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -169,6 +171,15 @@ public class Main {
     private static void getNumberOfProductsStartingWithEachLetter() {
         var counts = warehouse.getNumberOfProductsStartingWithEachLetter();
         counts.forEach((letter, count) -> System.out.println(letter + ": " + count));
+    }
+
+    private static void getAllProductsWithMaxRatingCreatedThisMonthSortedByDate() {
+        var products = warehouse.getAllProductsWithMaxRatingCreatedThisMonthSortedByDate();
+        if (products.isEmpty()) {
+            System.out.println("No products found with max rating created this month.");
+        } else {
+            products.forEach(System.out::println);
+        }
     }
 
     private static int getProductId() {

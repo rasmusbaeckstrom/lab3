@@ -41,11 +41,11 @@ public class Warehouse {
     }
 
     // Method to add a product
-    public void addProduct(int id, String name, Category category, int rating) {
+    public void addProduct(int id, String name, Category category, int rating, LocalDateTime createdDate) {
         validateProductId(id);
         validateProduct(name, rating);
         checkIfProductIdExists(id);
-        Product product = new Product(id, name, category, rating, LocalDateTime.now());
+        Product product = new Product(id, name, category, rating, createdDate);
         products.add(product);
     }
 
@@ -132,5 +132,18 @@ public class Warehouse {
         Map<Character, Long> productsStartingWithEachLetter = products.stream()
                 .collect(Collectors.groupingBy(p -> p.getName().charAt(0), Collectors.counting()));
         return Collections.unmodifiableMap(productsStartingWithEachLetter);
+    }
+
+    // Method to get all products with max rating, created this month and sorted by date with the latest first
+    public List<ProductRecord> getAllProductsWithMaxRatingCreatedThisMonthSortedByDate() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfMonth = now.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfMonth = now.withDayOfMonth(now.toLocalDate().lengthOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        List<ProductRecord> productRecords = products.stream()
+                .filter(p -> p.getRating() == 10 && p.getCreatedDate().isAfter(startOfMonth) && p.getCreatedDate().isBefore(endOfMonth))
+                .sorted(Comparator.comparing(Product::getCreatedDate).reversed())
+                .map(p -> new ProductRecord(p.getId(), p.getName(), p.getCategory(), p.getRating(), p.getCreatedDate(), p.getModifiedDate()))
+                .collect(Collectors.toList());
+        return Collections.unmodifiableList(productRecords);
     }
 }
