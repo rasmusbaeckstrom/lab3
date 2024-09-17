@@ -41,11 +41,11 @@ public class Warehouse {
     }
 
     // Method to add a product
-    public void addProduct(int id, String name, Category category, int rating) {
+    public void addProduct(int id, String name, Category category, int rating, LocalDateTime createdDate) {
         validateProductId(id);
         validateProduct(name, rating);
         checkIfProductIdExists(id);
-        Product product = new Product(id, name, category, rating, LocalDateTime.now());
+        Product product = new Product(id, name, category, rating, createdDate);
         products.add(product);
     }
 
@@ -107,6 +107,41 @@ public class Warehouse {
     public List<ProductRecord> getAllProductsThatHasBeenModifiedSinceCreation() {
         List<ProductRecord> productRecords = products.stream()
                 .filter(p -> p.getModifiedDate().isAfter(p.getCreatedDate()))
+                .map(p -> new ProductRecord(p.getId(), p.getName(), p.getCategory(), p.getRating(), p.getCreatedDate(), p.getModifiedDate()))
+                .collect(Collectors.toList());
+        return Collections.unmodifiableList(productRecords);
+    }
+
+    // Method to get all Categories that has at least one product
+    public Set<Category> getAllCategoriesThatHasAtLeastOneProduct() {
+        Set<Category> categories = products.stream()
+                .map(Product::getCategory)
+                .collect(Collectors.toSet());
+        return Collections.unmodifiableSet(categories);
+    }
+
+    // Method to get how many products there are in given category
+    public long getNumberOfProductsInCategory(Category category) {
+        return products.stream()
+                .filter(p -> p.getCategory().equals(category))
+                .count();
+    }
+
+    // Method to get a Map that contains all the letters that product name start with as key and the number of products that start with that letter as value
+    public Map<Character, Long> getNumberOfProductsStartingWithEachLetter() {
+        Map<Character, Long> productsStartingWithEachLetter = products.stream()
+                .collect(Collectors.groupingBy(p -> p.getName().charAt(0), Collectors.counting()));
+        return Collections.unmodifiableMap(productsStartingWithEachLetter);
+    }
+
+    // Method to get all products with max rating, created this month and sorted by date with the latest first
+    public List<ProductRecord> getAllProductsWithMaxRatingCreatedThisMonthSortedByDate() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfMonth = now.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfMonth = now.withDayOfMonth(now.toLocalDate().lengthOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        List<ProductRecord> productRecords = products.stream()
+                .filter(p -> p.getRating() == 10 && p.getCreatedDate().isAfter(startOfMonth) && p.getCreatedDate().isBefore(endOfMonth))
+                .sorted(Comparator.comparing(Product::getCreatedDate).reversed())
                 .map(p -> new ProductRecord(p.getId(), p.getName(), p.getCategory(), p.getRating(), p.getCreatedDate(), p.getModifiedDate()))
                 .collect(Collectors.toList());
         return Collections.unmodifiableList(productRecords);

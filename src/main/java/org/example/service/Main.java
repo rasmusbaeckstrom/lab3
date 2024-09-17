@@ -27,6 +27,10 @@ public class Main {
                     case 5 -> getAllProductsByCategorySortedByProductName();
                     case 6 -> getAllProductsCreatedAfterASpecificDate();
                     case 7 -> getAllProductsThatHasBeenModifiedSinceCreation();
+                    case 8 -> getAllCategoriesThatHasAtLeastOneProduct();
+                    case 9 -> getNumberOfProductsInCategory();
+                    case 10 -> getNumberOfProductsStartingWithEachLetter();
+                    case 11 -> getAllProductsWithMaxRatingCreatedThisMonthSortedByDate();
                     case 0 -> exit = true;
                     default -> System.out.println("Invalid choice. Please try again.");
                 }
@@ -44,6 +48,10 @@ public class Main {
         System.out.println("5. Get All Products By Category Sorted By Product Name");
         System.out.println("6. Get All Products Created After A Specific Date");
         System.out.println("7. Get All Products That Has Been Modified Since Creation");
+        System.out.println("8. Get All Categories That Has At Least One Product");
+        System.out.println("9. Get Number Of Products In Category");
+        System.out.println("10. Get Number Of Products Starting With Each Letter");
+        System.out.println("11. Get All Products With Max Rating Created This Month Sorted By Date");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
     }
@@ -55,7 +63,7 @@ public class Main {
         int rating = getProductRating();
 
         try {
-            warehouse.addProduct(id, name, category, rating);
+            warehouse.addProduct(id, name, category, rating, LocalDateTime.now());
             System.out.println("Product added successfully.");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -132,6 +140,43 @@ public class Main {
         var products = warehouse.getAllProductsThatHasBeenModifiedSinceCreation();
         if (products.isEmpty()) {
             System.out.println("No products have been modified since creation.");
+        } else {
+            products.forEach(System.out::println);
+        }
+    }
+
+    private static void getAllCategoriesThatHasAtLeastOneProduct() {
+        var categories = warehouse.getAllCategoriesThatHasAtLeastOneProduct();
+        if (categories.isEmpty()) {
+            System.out.println("No categories found with products.");
+        } else {
+            categories.forEach(System.out::println);
+        }
+    }
+
+    private static void getNumberOfProductsInCategory() {
+        while (true) {
+            System.out.print("Enter product category (ELECTRONICS, CLOTHING, BOOKS, TOYS): ");
+            try {
+                Category category = Category.valueOf(scanner.nextLine().toUpperCase());
+                long count = warehouse.getNumberOfProductsInCategory(category);
+                System.out.println("Number of products in category " + category + ": " + count);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid category. Please enter a valid category.");
+            }
+        }
+    }
+
+    private static void getNumberOfProductsStartingWithEachLetter() {
+        var counts = warehouse.getNumberOfProductsStartingWithEachLetter();
+        counts.forEach((letter, count) -> System.out.println(letter + ": " + count));
+    }
+
+    private static void getAllProductsWithMaxRatingCreatedThisMonthSortedByDate() {
+        var products = warehouse.getAllProductsWithMaxRatingCreatedThisMonthSortedByDate();
+        if (products.isEmpty()) {
+            System.out.println("No products found with max rating created this month.");
         } else {
             products.forEach(System.out::println);
         }
