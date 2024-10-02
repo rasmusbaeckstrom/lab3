@@ -5,13 +5,12 @@
 package org.example.service;
 
 import org.example.entities.Category;
-
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final Warehouse warehouse = new Warehouse();
+    private static final WarehouseService warehouseService = new WarehouseService();
 
     public static void main(String[] args) {
         boolean exit = false;
@@ -63,7 +62,7 @@ public class Main {
         int rating = getProductRating();
 
         try {
-            warehouse.addProduct(id, name, category, rating, LocalDateTime.now());
+            warehouseService.addProduct(id, name, category, rating, LocalDateTime.now());
             System.out.println("Product added successfully.");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -71,19 +70,19 @@ public class Main {
     }
 
     private static void getAllProducts() {
-        var products = warehouse.getAllProducts();
+        var products = warehouseService.getAllProducts();
         products.forEach(System.out::println);
     }
 
     private static void getProductById() {
         int id = getProductId();
-        var product = warehouse.getProductById(id);
+        var product = warehouseService.getProductById(id);
         product.ifPresentOrElse(System.out::println, () -> System.out.println("Product not found."));
     }
 
     private static void updateProduct() {
         int id = getProductId();
-        if (warehouse.getProductById(id).isEmpty()) {
+        if (warehouseService.getProductById(id).isEmpty()) {
             System.out.println("Product ID does not exist. Please enter a valid ID.");
             return;
         }
@@ -93,7 +92,7 @@ public class Main {
         int newRating = getProductRating();
 
         try {
-            boolean updated = warehouse.updateProduct(id, newName, newCategory, newRating);
+            boolean updated = warehouseService.updateProduct(id, newName, newCategory, newRating);
             System.out.println("Product updated: " + updated);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -105,7 +104,7 @@ public class Main {
             System.out.print("Enter product category (ELECTRONICS, CLOTHING, BOOKS, TOYS): ");
             try {
                 Category category = Category.valueOf(scanner.nextLine().toUpperCase());
-                var products = warehouse.getAllProductsByCategorySortedByProductName(category);
+                var products = warehouseService.getAllProductsByCategorySortedByProductName(category);
                 if (products.isEmpty()) {
                     System.out.println("No products found in this category.");
                 } else {
@@ -123,7 +122,7 @@ public class Main {
             System.out.print("Enter date (YYYY-MM-DD): ");
             try {
                 LocalDateTime date = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
-                var products = warehouse.getAllProductsCreatedAfterASpecificDate(date);
+                var products = warehouseService.getAllProductsCreatedAfterASpecificDate(date);
                 if (products.isEmpty()) {
                     System.out.println("No products found created after this date.");
                 } else {
@@ -137,7 +136,7 @@ public class Main {
     }
 
     private static void getAllProductsThatHasBeenModifiedSinceCreation() {
-        var products = warehouse.getAllProductsThatHasBeenModifiedSinceCreation();
+        var products = warehouseService.getAllProductsThatHasBeenModifiedSinceCreation();
         if (products.isEmpty()) {
             System.out.println("No products have been modified since creation.");
         } else {
@@ -146,7 +145,7 @@ public class Main {
     }
 
     private static void getAllCategoriesThatHasAtLeastOneProduct() {
-        var categories = warehouse.getAllCategoriesThatHasAtLeastOneProduct();
+        var categories = warehouseService.getAllCategoriesThatHasAtLeastOneProduct();
         if (categories.isEmpty()) {
             System.out.println("No categories found with products.");
         } else {
@@ -159,7 +158,7 @@ public class Main {
             System.out.print("Enter product category (ELECTRONICS, CLOTHING, BOOKS, TOYS): ");
             try {
                 Category category = Category.valueOf(scanner.nextLine().toUpperCase());
-                long count = warehouse.getNumberOfProductsInCategory(category);
+                long count = warehouseService.getNumberOfProductsInCategory(category);
                 System.out.println("Number of products in category " + category + ": " + count);
                 break;
             } catch (IllegalArgumentException e) {
@@ -169,12 +168,12 @@ public class Main {
     }
 
     private static void getNumberOfProductsStartingWithEachLetter() {
-        var counts = warehouse.getNumberOfProductsStartingWithEachLetter();
+        var counts = warehouseService.getNumberOfProductsStartingWithEachLetter();
         counts.forEach((letter, count) -> System.out.println(letter + ": " + count));
     }
 
     private static void getAllProductsWithMaxRatingCreatedThisMonthSortedByDate() {
-        var products = warehouse.getAllProductsWithMaxRatingCreatedThisMonthSortedByDate();
+        var products = warehouseService.getAllProductsWithMaxRatingCreatedThisMonthSortedByDate();
         if (products.isEmpty()) {
             System.out.println("No products found with max rating created this month.");
         } else {
@@ -187,7 +186,7 @@ public class Main {
             System.out.print("Enter product ID: ");
             try {
                 int id = Integer.parseInt(scanner.nextLine());
-                warehouse.validateProductId(id);
+                warehouseService.validateProductId(id);
                 return id;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Product ID must be a number.");
@@ -201,7 +200,7 @@ public class Main {
         while (true) {
             int id = getProductId();
             try {
-                warehouse.checkIfProductIdExists(id);
+                warehouseService.checkIfProductIdExists(id);
                 return id;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
