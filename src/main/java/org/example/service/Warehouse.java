@@ -8,7 +8,6 @@ package org.example.service;
 import org.example.entities.Product;
 import org.example.entities.ProductRecord;
 import org.example.entities.Category;
-
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
